@@ -70,11 +70,11 @@ def stop():
 
 
 def main():
-    print(f"블루투스 시리얼 제어 시작... (포트: {SERIAL_PORT})")
+    print(f"Starting... (Port: {SERIAL_PORT})")
 
     try:
         ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-        print("휴대폰 앱에서 연결을 기다립니다...")
+        print("Connecting...")
 
         while True:
             if ser.in_waiting > 0:
@@ -83,7 +83,7 @@ def main():
                 if not data:
                     continue
 
-                print(f"수신된 데이터: {data}")
+                print(f"Send Data: {data}")
 
                 if data == "b7":
                     print("Go Forward")
@@ -98,7 +98,7 @@ def main():
                     print("Turn Right")
                     turn_right(TURN_SPEED)
                 elif data == "b0":
-                    print("프로그램 종료 신호 수신...")
+                    print("exit...")
                     break
                 else:
                     print("Stop")
@@ -107,14 +107,14 @@ def main():
             time.sleep(0.01)
 
     except serial.SerialException as e:
-        print(f"시리얼 포트 오류: {e}")
-        print("라즈베리파이 설정(raspi-config)에서 시리얼 포트가 활성화되었는지 확인하세요.")
+        print(f"Serial port error: {e}")
+
 
     except KeyboardInterrupt:
-        print("사용자에 의해 프로그램이 중지되었습니다.")
+        print("Program exit")
 
     finally:
-        print("GPIO 정리 및 종료.")
+        print("GPIO exit")
         stop()
         GPIO.cleanup()
         if 'ser' in locals() and ser.is_open:
@@ -123,3 +123,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
